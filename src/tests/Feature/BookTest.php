@@ -22,11 +22,9 @@ class BookTest extends TestCase
 
     protected function bookPayload()
     {
-        return [
-            'title' => $this->faker()->sentence(),
-            'author' => $this->faker()->sentence(),
-            'release_date' => now()->format('Y-m-d'),
-        ];
+        $bookPayload = new BookPayload();
+
+        return $bookPayload->create();
     }
 
     public function test_when_guest_creates_a_book_then_302_is_returend()

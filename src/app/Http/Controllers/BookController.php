@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBookRequest;
 use App\Models\Book;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
-    public function store(Request $request)
+    public function store(StoreBookRequest $request)
     {
-        $attributes = $request->all();
+        $attributes = $request->validated();
 
         $attributes['account_id'] = Auth::user()->account_id;
 
