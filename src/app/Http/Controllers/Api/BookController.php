@@ -13,8 +13,12 @@ class BookController extends Controller
     {
         $books = Book::where('account_id', Auth::user()->account_id)
             ->paginate(10);
-        // $books = Book::paginate(10);
 
         return BookResource::collection($books);
+    }
+
+    public function show(Book $book)
+    {
+        return new BookResource($book);
     }
 }
