@@ -26,7 +26,7 @@
                     <td>{{ $book->author }}</td>
                     <td>{{ $book->release_date }}</td>
                     <td class="d-flex justify-content-end">
-                        <form action="{{ route('books.destroy', $book->id) }}" method="POST">
+                        <form action="{{ route('books.destroy', $book->id) }}" method="POST" onsubmit="return confirm('Do you really want to remove the book?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger mx-1">Remove</button>
