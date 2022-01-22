@@ -10,7 +10,6 @@ class BookController extends Controller
 {
     public function index()
     {
-        // $books = Auth::user()->account->books()->paginate(10);
         $books = Book::where('account_id', Auth::user()->account_id)
             ->paginate(10);
 
@@ -36,5 +35,15 @@ class BookController extends Controller
     public function create()
     {
         return view('books.create');
+    }
+
+    public function destroy(Book $book)
+    {
+        $elapsedDays = $book->created_at->diffInDays(now());
+
+        if ($elapsedDays < 3)
+            $book->delete();
+
+        return redirect()->route('books.index');
     }
 }

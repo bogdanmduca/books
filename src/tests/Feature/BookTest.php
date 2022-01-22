@@ -84,4 +84,44 @@ class BookTest extends TestCase
             $response->assertSee([$book->title, $book->author, $book->release_date]);
         }
     }
+
+    public function test_when_user_delete_books_then_database_is_updated()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = $this->signIn();
+        $book = Book::factory()->for($user->account)->create();
+        $this->assertDatabaseHas('books', ['id' => $book->id]);
+
+        $this->delete("books/{$book->id}");
+
+        $this->assertDatabaseMissing('books', ['id' => $book->id]);
+    }
+
+    public function test_when_user_delete_books_older_than_2_days_then_database_is_not_updated()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = $this->signIn();
+        $book = Book::factory()->for($user->account)->create([
+            'created_at' => now()->subDays(3)
+        ]);
+
+        $this->assertDatabaseHas('books', ['id' => $book->id]);
+
+        $this->delete("books/{$book->id}");
+
+        $this->assertDatabaseHas('books', ['id' => $book->id]);
+    }
+
+    public function test_after_user_delete_books_then_is_redirected_to_books_index()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = $this->signIn();
+        $book = Book::factory()->for($user->account)->create();
+
+        $this->delete("books/{$book->id}")
+            ->assertRedirect(route('books.index'));
+    }
 }

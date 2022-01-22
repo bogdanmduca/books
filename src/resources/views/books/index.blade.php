@@ -23,6 +23,13 @@
                     <td>{{ $book->title }}</td>
                     <td>{{ $book->author }}</td>
                     <td>{{ $book->release_date }}</td>
+                    <td class="d-flex justify-content-end">
+                        <form action="{{ route('books.destroy', $book->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger mx-1">Remove</button>
+                        </form>
+                    </td>
                 </tr>
 
                 @endforeach
