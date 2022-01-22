@@ -15,4 +15,9 @@ class Book extends Model
         'release_date',
         'account_id',
     ];
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
 }

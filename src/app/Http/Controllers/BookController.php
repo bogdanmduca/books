@@ -8,6 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
+    public function index()
+    {
+        // $books = Auth::user()->account->books()->paginate(10);
+        $books = Book::where('account_id', Auth::user()->account_id)
+            ->paginate(10);
+
+        return view('books.index', compact('books'));
+    }
+
     public function store(StoreBookRequest $request)
     {
         $attributes = $request->validated();
@@ -20,6 +29,8 @@ class BookController extends Controller
             'release_date' => $attributes['release_date'],
             'account_id' => $attributes['account_id'],
         ]);
+
+        return redirect()->route('books.index');
     }
 
     public function create()
