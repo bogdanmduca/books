@@ -42,7 +42,7 @@ class BookController extends Controller
     {
         $elapsedDays = $book->created_at->diffInDays(now());
 
-        $message = 'Book was deleted';
+        $message = 'Book was not deleted. It passed 2 days.';
         if ($elapsedDays < 3) {
             $message = $book->delete() ? 'You deleted the book' : "Something went wrong";
         }
