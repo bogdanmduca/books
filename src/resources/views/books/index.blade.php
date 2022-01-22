@@ -6,6 +6,11 @@
         <div class="d-flex justify-content-end">
             <a href="{{route('books.create')}}" class="btn btn-primary"> Add new book </a>
         </div>
+        @if(session('message'))
+        <div class="alert alert-secondary mt-4" role="alert">
+            {{session('message')}}
+        </div>
+        @endif
 
         <table class="table">
             <thead>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBookRequest;
 use App\Models\Book;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
@@ -41,9 +42,11 @@ class BookController extends Controller
     {
         $elapsedDays = $book->created_at->diffInDays(now());
 
-        if ($elapsedDays < 3)
-            $book->delete();
+        $message = 'Book was deleted';
+        if ($elapsedDays < 3) {
+            $message = $book->delete() ? 'You deleted the book' : "Something went wrong";
+        }
 
-        return redirect()->route('books.index');
+        return redirect()->route('books.index')->with('message', $message);
     }
 }
