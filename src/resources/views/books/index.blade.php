@@ -19,6 +19,7 @@
                     <th scope="col">Title</th>
                     <th scope="col">Author</th>
                     <th scope="col">Release date</th>
+                    <th scope="col" class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,7 +35,7 @@
                         <form action="{{ route('books.destroy', $book->id) }}" method="POST" onsubmit="return confirm('Do you really want to remove the book?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger mx-1">Remove</button>
+                            <button type="submit" class="btn btn-danger">Remove</button>
                         </form>
                     </td>
                 </tr>
