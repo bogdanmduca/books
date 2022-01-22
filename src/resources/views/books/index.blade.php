@@ -19,7 +19,9 @@
             <tbody>
                 @foreach($books as $book)
                 <tr>
-                    <th scope="row">{{ $loop->index + 1}} </th>
+                    <th scope="row">
+                        <a href="/api/books/{{$book->id}}"> {{ $book->id }} </a>
+                    </th>
                     <td>{{ $book->title }}</td>
                     <td>{{ $book->author }}</td>
                     <td>{{ $book->release_date }}</td>

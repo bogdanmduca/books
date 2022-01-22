@@ -163,19 +163,24 @@ class BooksApiTest extends TestCase
         $signedUser = User::factory()->create();
         $book = Book::factory()->for($signedUser->account)->create();
 
-        $this->withBasicAuth($signedUser)
-            ->getJson("api/books/{$book->id}");
-
         $expected = [
-            'data' => [
-                'title' => $book->title,
-                'author' => $book->author,
-                'release_date' => $book->release_date,
+            'account_id' => $signedUser->account_id,
+            'status_code' => 200,
+            'content' => [
+                'data' => [
+                    'title' => $book->title,
+                    'author' => $book->author,
+                    'release_date' => $book->release_date,
+                ]
             ]
         ];
 
         Log::shouldReceive('info')
             ->once()
             ->with($expected);
+
+
+        $this->withBasicAuth($signedUser)
+            ->getJson("api/books/{$book->id}");
     }
 }
