@@ -20,4 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('books', [BookController::class, 'index']);
-Route::middleware(['can:view,book'])->get('books/{book}', [BookController::class, 'show']);
+Route::middleware(['can:view,book', 'log.book'])->get('books/{book}', [BookController::class, 'show']);

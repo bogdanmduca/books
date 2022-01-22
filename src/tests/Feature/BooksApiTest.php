@@ -8,6 +8,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class BooksApiTest extends TestCase
@@ -151,5 +152,30 @@ class BooksApiTest extends TestCase
         $this->withBasicAuth($signedUser)
             ->getJson("api/books/{$book->id}")
             ->assertStatus(403);
+    }
+
+    public function test_api_when_user_views_his_book_data_is_logged()
+    {
+        $this->markTestSkipped('To be implemented');
+
+        $this->withoutExceptionHandling();
+
+        $signedUser = User::factory()->create();
+        $book = Book::factory()->for($signedUser->account)->create();
+
+        $this->withBasicAuth($signedUser)
+            ->getJson("api/books/{$book->id}");
+
+        $expected = [
+            'data' => [
+                'title' => $book->title,
+                'author' => $book->author,
+                'release_date' => $book->release_date,
+            ]
+        ];
+
+        Log::shouldReceive('info')
+            ->once()
+            ->with($expected);
     }
 }
