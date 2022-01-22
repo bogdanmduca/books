@@ -124,4 +124,74 @@ class BookTest extends TestCase
         $this->delete("books/{$book->id}")
             ->assertRedirect(route('books.index'));
     }
+
+    public function test_when_user_views_books_from_api_then_book_resource_is_returned()
+    {
+        $this->withoutExceptionHandling();
+
+        $signedUser = $this->signIn();
+        $books = Book::factory()->for($signedUser->account)->count(5)->create();
+
+        $response = $this->getJson('api/books');
+
+        $expected = [];
+        foreach ($books as $book) {
+            $expected['data'][] = [
+                'title' => $book->title,
+                'author' => $book->author,
+                'release_date' => $book->release_date,
+            ];
+        }
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonFragment($expected);
+    }
+
+    public function test_when_user_views_books_from_api_then_account_books_from_others_users_are_returned()
+    {
+        $this->withoutExceptionHandling();
+
+        $signedUser = $this->signIn();
+        $user = User::factory()->for($signedUser->account)->create();
+        $books = Book::factory()->for($user->account)->count(5)->create();
+
+        $response = $this->getJson('api/books');
+
+        $expected = [];
+        foreach ($books as $book) {
+            $expected['data'][] = [
+                'title' => $book->title,
+                'author' => $book->author,
+                'release_date' => $book->release_date,
+            ];
+        }
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonFragment($expected);
+    }
+
+    public function test_when_user_views_books_from_api_then_account_books_from_other_accounts_are_not_returned()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->signIn();
+        $books = Book::factory()->count(5)->create();
+
+        $response = $this->getJson('api/books');
+
+        $expected = [];
+        foreach ($books as $book) {
+            $expected['data'][] = [
+                'title' => $book->title,
+                'author' => $book->author,
+                'release_date' => $book->release_date,
+            ];
+        }
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonMissing($expected);
+    }
 }
